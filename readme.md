@@ -10,7 +10,7 @@ A work-in-process application that will send the user an email every day with a 
 - [Sendgrid Python Reference](https://github.com/sendgrid/sendgrid-python) - service for sending emails
 
 ## To Do
-- [ ]
+- [ ] Fix for loop. The year variable is changing, but the API call still only calls for current year? very weird
 
 ## Reference
 the api returns this for a given date:
