@@ -13,6 +13,8 @@ numOfYears = datetime.now().year - firstPostYear
 
 year = datetime.now() - timedelta(days=365)
 
+# should this be a while loop instead?
+
 for x in range (0, numOfYears):
     pb.posts.get(year) # for some reason, year is being updated, but this always gets the post for current year
     print(year)

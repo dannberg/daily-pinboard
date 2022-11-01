@@ -11,6 +11,7 @@ A work-in-process application that will send the user an email every day with a 
 
 ## To Do
 - [ ] Fix for loop. The year variable is changing, but the API call still only calls for current year? very weird
+- [ ] change for loop into while?
 
 ## Reference
 the api returns this for a given date:
