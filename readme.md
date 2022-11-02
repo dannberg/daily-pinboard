@@ -10,9 +10,11 @@ A work-in-process application that will send the user an email every day with a 
 - [Sendgrid Python Reference](https://github.com/sendgrid/sendgrid-python) - service for sending emails
 
 ## To Do
+- [x] successfully retrieve daily posts
 - [ ] test for when there are multiple resules
 - [ ] save post to a variable, and retrieve name and content
 - [ ] figure out how to send via email (sendgrid?)
+- [ ] hide Pinboard API key
 
 ## Reference
 the api returns this for a given date:
