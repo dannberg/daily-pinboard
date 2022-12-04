@@ -9,8 +9,11 @@ numOfYears = datetime.now().year - firstPostYear + 1
 
 year = datetime.now() - relativedelta(years=1)
 
+datePosts = []
+
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
     dayBeforeSearchDate = searchDate - timedelta(days=1)
-    pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
-    print(searchDate)
+    post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    if post:
+        datePosts.append(post)
