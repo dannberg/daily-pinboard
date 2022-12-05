@@ -12,8 +12,8 @@ Icon
 
 # python config file
 config.py
-# .idea/
-# __pycache__/
+.idea/
+__pycache__/
 
 # Thumbnails
 ._*
