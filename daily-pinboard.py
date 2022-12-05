@@ -37,11 +37,17 @@ msg['From'] = 'dann@dannberg.me'
 msg['To'] = 'dann@dannb.org'
 
 # Set email message body as content of datePosts array
-# this doesn't work yet. datePosts is type `list`.
-# Need to figure out how to add the year before each post, and then get all the text data out of the inner lists
 email_body = ''
-for inner_array in datePosts:
-  email_body += '\n'.join(inner_array) + '\n'
+
+for sublist in datePosts:
+    # Iterate over the Bookmark objects in the sub-list
+    for bookmark in sublist:
+        # Extract the description and url and add them to the email body string
+        description = bookmark.description
+        url = bookmark.url
+        email_body += f"{description}: {url}\n"
+
+msg.set_content(email_body)
 
 # Set up the SMTP server and send the email
 server = smtplib.SMTP('dannberg.me')
