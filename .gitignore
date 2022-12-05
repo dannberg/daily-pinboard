@@ -12,6 +12,7 @@ Icon
 
 # python config file
 config.py
+.idea/
 
 # Thumbnails
 ._*
