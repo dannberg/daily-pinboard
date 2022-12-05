@@ -10,7 +10,7 @@ from email.message import EmailMessage
 pb = pinboard.Pinboard(config.PINBOARD_API_TOKEN)
 
 # Manually look to see what year you had your first Pinboard post
-firstPostYear = 2012
+firstPostYear = int(config.FIRST_POST_YEAR)
 
 numOfYears = datetime.now().year - firstPostYear + 1
 
@@ -51,5 +51,6 @@ msg.set_content(email_body)
 server = smtplib.SMTP(config.SMTP_SERVER)
 server.starttls()
 server.login(config.SMTP_USERNAME, config.SMTP_PASS)
-server.send_message(msg)
+if len(email_body) > 0:
+    server.send_message(msg)
 server.quit()

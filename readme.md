@@ -1,13 +1,35 @@
 # Daily Pinboard
 
-A work-in-process application that will send the user an email every day with a link to all the pinboard bookmarks that were made on the same day in years past. Think, [TimeHop](https://www.timehop.com/) for [Pinboard](https://pinboard.in). If there were no links saved on that day, do not send an email.
+A python script that will send the user an email with a link to all their Pinboard bookmarks that were made on the date the script is run, in years past. Think, [TimeHop](https://www.timehop.com/) for [Pinboard](https://pinboard.in). If there were no links saved on that day, do not send an email.
+
+I'm sure there are ways to optimize this code that are beyond my current skill level. If you discover any improvements, please let me know!
+
+# Setup
+
+## 1. Set Environmental variables
+This code uses a `config.py` file in the same directory as the script that contains secrets. You'll want to set these secrets yourself if you're going to use this script:
+
+| Config             | Description                                                                         |
+|--------------------|-------------------------------------------------------------------------------------|
+| PINBOARD_API_TOKEN | API Token from your Pinboard [Password page](https://pinboard.in/settings/password) |
+| MSG_FROM           | Email address where the daily email should be sent from                             |
+| MSG_TO             | Email address where you want the email sent                                         |
+| SMTP_SERVER        | Your SMTP server address                                                            |
+| SMTP_USERNAME      | Your SMTP server username                                                           |
+| SMTP_PASS          | Your SMTP server password                                                           |
+| FIRST_POST_YEAR    | The year in which you made your first Pinboard bookmark                             |
+
+## 2. Set the script to run daily
+
+You can do this with either a [cron job](https://towardsdatascience.com/how-to-schedule-python-scripts-with-cron-the-only-guide-youll-ever-need-deea2df63b4e) or by using an application such as [Keyboard Maestro](https://www.keyboardmaestro.com/main/) (which is what I do.)
+
+
 
 ---
 
 ## Links
 - [Pinboard API](https://github.com/lionheart/pinboard.py)
 - [Python datetime reference](https://stackoverflow.com/questions/5158160/python-get-datetime-for-3-years-ago-today)
-- [Sendgrid Python Reference](https://github.com/sendgrid/sendgrid-python) - service for sending emails
 
 ## To Do
 - [x] successfully retrieve daily posts
@@ -15,6 +37,7 @@ A work-in-process application that will send the user an email every day with a 
 - [x] save post to a variable, and retrieve name and content
 - [x] figure out how to send via email (sendgrid?)
 - [ ] hide Pinboard API key
+- [ ] edit the code so that if the email is empty, it will not send
 
 ## Reference
 the api returns this for a given date:
