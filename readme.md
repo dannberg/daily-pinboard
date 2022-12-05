@@ -8,7 +8,7 @@ I'm sure there are ways to optimize this code that are beyond my current skill l
 
 ## 1. Install dependencies
 
-If you haven't yet, make sure you install pinboard.py:
+If you haven't yet, make sure you install [pinboard.py](https://github.com/lionheart/pinboard.py):
 
 `pip3 install "pinboard>=2.0"`
 
