@@ -16,14 +16,24 @@ numOfYears = datetime.now().year - firstPostYear + 1
 year = datetime.now() - relativedelta(years=1)
 
 datePosts = []
+email_body = ''
 
 # Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
     dayBeforeSearchDate = searchDate - timedelta(days=1)
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    # if post:
+    #     datePosts.append(searchDate.year) # possibly remove?
+    #     datePosts.append(post)
     if post:
-        datePosts.append(post)
+        year_str = str(searchDate.year)
+        email_body += f"Year: {year_str}\n"
+        for bookmark in post:
+            description = bookmark.description
+            url = bookmark.url
+            email_body += f"{description}: {url}\n"
+        email_body += "\n\n"
 
 # Get current month and day as strings
 current_date = datetime.now()
@@ -37,15 +47,15 @@ msg['From'] = 'dann@dannberg.me'
 msg['To'] = 'dann@dannb.org'
 
 # Set email message body as content of datePosts array
-email_body = ''
 
-for sublist in datePosts:
-    # Iterate over the Bookmark objects in the sub-list
-    for bookmark in sublist:
-        # Extract the description and url and add them to the email body string
-        description = bookmark.description
-        url = bookmark.url
-        email_body += f"{description}: {url}\n"
+
+# for sublist in datePosts:
+#     # Iterate over the Bookmark objects in the sub-list
+#     for bookmark in sublist:
+#         # Extract the description and url and add them to the email body string
+#         description = bookmark.description
+#         url = bookmark.url
+#         email_body += f"{description}: {url}\n"
 
 msg.set_content(email_body)
 
