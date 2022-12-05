@@ -6,7 +6,19 @@ I'm sure there are ways to optimize this code that are beyond my current skill l
 
 # Setup
 
-## 1. Set Environmental variables
+## 1. Install dependencies
+
+If you haven't yet, make sure you install pinboard.py:
+
+`pip3 install "pinboard>=2.0"`
+
+You may also need `dateutil`:
+
+`pip3 install python-dateutil`
+
+If you're missing anything else, you should get an error when you try and run the script saying something to the effect of: `ModuleNotFoundError: No module named '[module name]]'`. That means you need to install that module.
+
+## 2. Set Environmental variables
 This code uses a `config.py` file in the same directory as the script, which contains your secrets.
 
 To use this, rename `config-example.py` to `config.py` and update all the variables:
@@ -21,7 +33,7 @@ To use this, rename `config-example.py` to `config.py` and update all the variab
 | SMTP_PASS          | Your SMTP server password                                                           |
 | FIRST_POST_YEAR    | The year in which you made your first Pinboard bookmark                             |
 
-## 2. Set the script to run daily
+## 3. Set the script to run daily
 
 You can do this with a cron job.
 
