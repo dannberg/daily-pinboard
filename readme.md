@@ -52,7 +52,7 @@ Then, add the following line to your crontab file:
 
 Make sure you replace `/path/to/rundailypinboard.sh` with the actual path to your rundailypinboard.sh script.
 
-The cronjob code above runs the script daily at 7am ET. You can adjust that to your desired cadence and time.
+The cronjob code above runs the script daily at 7am ET (12pm UTC). You can [adjust that](https://crontab.guru/#0_12_*_*_*) to your desired cadence and time.
 
 ---
 
