@@ -48,6 +48,7 @@ The cronjob code above runs the script daily at 7am ET. You can adjust that to y
 
 ## To Do
 - [ ] improve the format of the email (make it pretty!)
+- [ ] change API key and email password before making Repo public
 - [x] successfully retrieve daily posts
 - [x] test for when there are multiple results
 - [x] save post to a variable, and retrieve name and content
