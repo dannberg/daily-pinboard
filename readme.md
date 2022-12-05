@@ -11,9 +11,9 @@ A work-in-process application that will send the user an email every day with a 
 
 ## To Do
 - [x] successfully retrieve daily posts
-- [ ] test for when there are multiple resules
-- [ ] save post to a variable, and retrieve name and content
-- [ ] figure out how to send via email (sendgrid?)
+- [x] test for when there are multiple results
+- [x] save post to a variable, and retrieve name and content
+- [x] figure out how to send via email (sendgrid?)
 - [ ] hide Pinboard API key
 
 ## Reference
