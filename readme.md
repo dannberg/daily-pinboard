@@ -47,6 +47,7 @@ The cronjob code above runs the script daily at 7am ET. You can adjust that to y
 - [Python datetime reference](https://stackoverflow.com/questions/5158160/python-get-datetime-for-3-years-ago-today)
 
 ## To Do
+- [ ] improve the format of the email (make it pretty!)
 - [x] successfully retrieve daily posts
 - [x] test for when there are multiple results
 - [x] save post to a variable, and retrieve name and content
