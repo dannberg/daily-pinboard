@@ -10,6 +10,8 @@
 # Icon must end with two \r
 Icon
 
+# python config file
+config.py
 
 # Thumbnails
 ._*
