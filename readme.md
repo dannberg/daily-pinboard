@@ -21,9 +21,24 @@ This code uses a `config.py` file in the same directory as the script that conta
 
 ## 2. Set the script to run daily
 
-You can do this with either a [cron job](https://towardsdatascience.com/how-to-schedule-python-scripts-with-cron-the-only-guide-youll-ever-need-deea2df63b4e) or by using an application such as [Keyboard Maestro](https://www.keyboardmaestro.com/main/) (which is what I do.)
+You can do this with a cron job.
 
+First, make sure `rundailypinboard.sh` and `daily-pinboard.py` are set as executable:
 
+`chmod +x rundailypinboard.sh`
+`chmod +x daily-pinboard.py`
+
+Open your crontab file:
+
+`crontab -e`
+
+Then, add the following line to your crontab file:
+
+`0 12 * * * /path/to/rundailypinboard.sh`
+
+Make sure you replace `/path/to/rundailypinboard.sh` with the actual path to your rundailypinboard.sh script.
+
+The cronjob code above runs the script daily at 7am ET. You can adjust that to your desired cadence and time.
 
 ---
 
@@ -36,8 +51,8 @@ You can do this with either a [cron job](https://towardsdatascience.com/how-to-s
 - [x] test for when there are multiple results
 - [x] save post to a variable, and retrieve name and content
 - [x] figure out how to send via email (sendgrid?)
-- [ ] hide Pinboard API key
-- [ ] edit the code so that if the email is empty, it will not send
+- [x] hide Pinboard API key
+- [x] edit the code so that if the email is empty, it will not send
 
 ## Reference
 the api returns this for a given date:
