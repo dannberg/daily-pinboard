@@ -7,7 +7,9 @@ I'm sure there are ways to optimize this code that are beyond my current skill l
 # Setup
 
 ## 1. Set Environmental variables
-This code uses a `config.py` file in the same directory as the script that contains secrets. You'll want to set these secrets yourself if you're going to use this script:
+This code uses a `config.py` file in the same directory as the script, which contains your secrets.
+
+To use this, rename `config-example.py` to `config.py` and update all the variables:
 
 | Config             | Description                                                                         |
 |--------------------|-------------------------------------------------------------------------------------|
@@ -60,3 +62,6 @@ The cronjob code above runs the script daily at 7am ET. You can adjust that to y
 the api returns this for a given date:
 
 `{'date': datetime.datetime(2022, 6, 11, 21, 13, 49), 'user': 'dannberg', 'posts': [<Bookmark description="lionheart/pinboard.py: A full-featured Python wrapper (and command-line utility) for the Pinboard API. Built by the makers of Pushpin for Pinboard." url="github.com">]}`
+
+# Thanks!
+A special thank you to OpenAI's [ChatGPT](https://chat.openai.com/chat) for the code help! Damn, that tool is nifty.
