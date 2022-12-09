@@ -1,3 +1,4 @@
+import os
 import pinboard
 import config
 from datetime import datetime, timedelta
@@ -7,7 +8,7 @@ from email.message import EmailMessage
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
 
-pb = pinboard.Pinboard(config.PINBOARD_API_TOKEN)
+pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
 
 # Manually look to see what year you had your first Pinboard post
 firstPostYear = int(config.FIRST_POST_YEAR)
@@ -50,7 +51,7 @@ msg.set_content(email_body)
 # Set up the SMTP server and send the email
 server = smtplib.SMTP(config.SMTP_SERVER)
 server.starttls()
-server.login(config.SMTP_USERNAME, config.SMTP_PASS)
+server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
 if len(email_body) > 0:
     server.send_message(msg)
 server.quit()
