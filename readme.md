@@ -25,13 +25,16 @@ To use this, rename `config-example.py` to `config.py` and update all the variab
 
 | Config             | Description                                                                         |
 |--------------------|-------------------------------------------------------------------------------------|
-| PINBOARD_API_TOKEN | API Token from your Pinboard [Password page](https://pinboard.in/settings/password) |
 | MSG_FROM           | Email address where the daily email should be sent from                             |
 | MSG_TO             | Email address where you want the email sent                                         |
 | SMTP_SERVER        | Your SMTP server address                                                            |
 | SMTP_USERNAME      | Your SMTP server username                                                           |
-| SMTP_PASS          | Your SMTP server password                                                           |
 | FIRST_POST_YEAR    | The year in which you made your first Pinboard bookmark                             |
+
+Also, add your Pinboard API token (from your [Pinboard password page](https://pinboard.in/settings/password)) and SMTP passwords as environmental variables (`/etc/environment`):
+
+- `PINBOARD_API_TOKEN`
+- `SMTP_PASS`
 
 ## 3. Set the script to run daily
 

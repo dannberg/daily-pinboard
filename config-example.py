@@ -1,7 +1,5 @@
-PINBOARD_API_TOKEN = "username:API_key"
 MSG_FROM = "from@email.com"
 MSG_TO = "to@email.com"
 SMTP_SERVER = "smtp-relay.gmail.com"
 SMTP_USERNAME = "youremail@gmail.com"
-SMTP_PASS = "emailpassword"
 FIRST_POST_YEAR = "2012"
