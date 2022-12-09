@@ -1,0 +1,2 @@
+pinboard==2.1.8
+python_dateutil==2.8.2
