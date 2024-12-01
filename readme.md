@@ -51,11 +51,11 @@ Open your crontab file:
 
 Then, add the following line to your crontab file:
 
-`0 7 * * * /path/to/rundailypinboard.sh`
+`0 7 * * * /path/to/rundailypinboard.sh >> /home/dannberg/daily-pinboard/logs.txt 2>&1`
 
 Make sure you replace `/path/to/rundailypinboard.sh` with the actual path to your rundailypinboard.sh script.
 
-The cronjob code above runs the script daily at 7am ET (my server's set timezone). You can [adjust that](https://crontab.guru/#0_7_*_*_*) to your desired cadence and time.
+The cronjob code above runs the script daily at 7am ET (my server's set timezone). You can [adjust that](https://crontab.guru/#0_7_*_*_*) to your desired cadence and time. Logs are saved to a logs.txt file, which is ignored by this Github repo.
 
 ---
 
