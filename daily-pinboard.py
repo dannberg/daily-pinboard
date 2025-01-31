@@ -1,12 +1,32 @@
 import os
 import pinboard
 import config
+import smtplib
+import time
+import socket
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-import smtplib
 from email.message import EmailMessage
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
+
+MAX_RETRIES = 10
+RETRY_INTERVAL = 10
+
+def wait_for_network():
+    """Retries until the network is available."""
+    for attempt in range(MAX_RETRIES):
+        try:
+            socket.create_connection(("8.8.8.8", 53), timeout=5)
+            return True
+        except OSError:
+            print(f"Network unavailable. Retry {attempt + 1}/{MAX_RETRIES} in {RETRY_INTERVAL} seconds...")
+            time.sleep(RETRY_INTERVAL)
+    print("Network still unavailable after multiple attempts. Exiting.")
+    exit(1)
+
+# Ensure network is available before running
+wait_for_network()
 
 pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
 
@@ -14,7 +34,6 @@ pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
 firstPostYear = int(config.FIRST_POST_YEAR)
 
 numOfYears = datetime.now().year - firstPostYear + 1
-
 year = datetime.now() - relativedelta(years=1)
 
 datePosts = []
@@ -48,10 +67,22 @@ msg['To'] = config.MSG_TO
 # Set email message body as content of datePosts array
 msg.set_content(email_body)
 
-# Set up the SMTP server and send the email
-server = smtplib.SMTP(config.SMTP_SERVER)
-server.starttls()
-server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
-if len(email_body) > 0:
-    server.send_message(msg)
-server.quit()
+# Attempt to send the email, retrying if necessary
+for attempt in range(MAX_RETRIES):
+    try:
+        print(f"Attempting to connect to SMTP server ({attempt + 1}/{MAX_RETRIES})...")
+        server = smtplib.SMTP(config.SMTP_SERVER, timeout=10)
+        server.starttls()
+        server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
+
+        if len(email_body) > 0:
+            server.send_message(msg)
+        server.quit()
+        print("Email sent successfully.")
+        break  # Exit loop if successful
+    except (socket.gaierror, OSError, smtplib.SMTPException) as e:
+        print(f"SMTP connection failed: {e}. Retrying in {RETRY_INTERVAL} seconds...")
+        time.sleep(RETRY_INTERVAL)
+else:
+    print("Failed to send email after multiple attempts. Exiting.")
+    exit(1)
