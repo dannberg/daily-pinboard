@@ -78,5 +78,5 @@ the api returns this for a given date:
 
 `{'date': datetime.datetime(2022, 6, 11, 21, 13, 49), 'user': 'dannberg', 'posts': [<Bookmark description="lionheart/pinboard.py: A full-featured Python wrapper (and command-line utility) for the Pinboard API. Built by the makers of Pushpin for Pinboard." url="github.com">]}`
 
-# Thanks!
-A special thank you to OpenAI's [ChatGPT](https://chat.openai.com/chat) for the code help! Damn, that tool is nifty.
+## License
+This project is licensed under the MIT License – you’re free to use, modify, and distribute it!
