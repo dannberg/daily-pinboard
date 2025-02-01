@@ -52,10 +52,11 @@ email_body = []
 # Modify the search loop
 for x in range(0, numOfYears):
     searchDate = (datetime.now() - relativedelta(years=x)).date()
-    print(f"\nSearching for posts on {searchDate}")
+    formatted_date = searchDate.strftime('%Y-%m-%d')  # Format date as YYYY-MM-DD
+    print(f"\nSearching for posts on {formatted_date}")
     try:
-        post = pb.posts.all(start=0, results=20, fromdt=searchDate, todt=searchDate)
-        print(f"API Response: {post}")  # Print the raw response
+        post = pb.posts.all(dt=formatted_date)  # Use dt parameter instead of fromdt/todt
+        print(f"API Response: {post}")
         print(f"Found {len(post)} posts for year {searchDate.year}")
         if post:
             year_data = {
@@ -64,7 +65,7 @@ for x in range(0, numOfYears):
             }
             email_body.append(year_data)
     except Exception as e:
-        print(f"Error querying for date {searchDate}: {str(e)}")
+        print(f"Error querying for date {formatted_date}: {str(e)}")
 
 # Get current month and day as strings
 current_date = datetime.now()
