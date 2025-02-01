@@ -12,6 +12,7 @@ Icon
 
 # python config file
 config.py
+config.py.save
 .idea/
 __pycache__/
 venv/
@@ -41,5 +42,6 @@ Temporary Items
 
 # Log files
 logs.txt
+pinboard_daily.log
 
 # End of https://www.toptal.com/developers/gitignore/api/macos

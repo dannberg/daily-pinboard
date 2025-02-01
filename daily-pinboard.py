@@ -37,7 +37,7 @@ numOfYears = datetime.now().year - firstPostYear + 1
 year = datetime.now() - relativedelta(years=1)
 
 datePosts = []
-email_body = ''
+email_body = []  # Changed to list to store year entries
 
 # Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
 for x in range(0, numOfYears):
@@ -45,13 +45,11 @@ for x in range(0, numOfYears):
     dayBeforeSearchDate = searchDate - timedelta(days=1)
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
     if post:
-        year_str = str(searchDate.year)
-        email_body += f"<h2>Year: {year_str}</h2>\n<ul>\n"
-        for bookmark in post:
-            description = bookmark.description
-            url = bookmark.url
-            email_body += f"<li>{description}: <a href=\"{url}\">{url}</a></li>\n"
-        email_body += "</ul>\n\n"
+        year_data = {
+            'year': str(searchDate.year),
+            'bookmarks': [(b.description, b.url) for b in post]
+        }
+        email_body.append(year_data)
 
 # Get current month and day as strings
 current_date = datetime.now()
@@ -62,12 +60,19 @@ current_day = current_date.strftime('%d')
 with open('email_template.html', 'r') as template_file:
     html_template = template_file.read()
 
-# Format the email content with HTML
-formatted_content = email_body.replace('\n', '<br>')
+# Build the years content string
+years_content = ''
+for year_data in email_body:
+    years_content += f'<h2>Year: {year_data["year"]}</h2>\n<ul>\n'
+    for description, url in year_data['bookmarks']:
+        years_content += f'<li>{description}: <a href="{url}">{url}</a></li>\n'
+    years_content += '</ul>\n\n'
+
+# Format the email content
 html_content = html_template.format(
     month=current_month,
     day=current_day,
-    content=formatted_content
+    years_content=years_content
 )
 
 # Set up the email message
@@ -77,7 +82,14 @@ msg['From'] = config.MSG_FROM
 msg['To'] = config.MSG_TO
 
 # Set both plain text and HTML versions
-msg.set_content(email_body)  # Plain text version
+plain_text = f"Pinboard Posts for {current_month} {current_day}\n\n"
+for year_data in email_body:
+    plain_text += f"Year: {year_data['year']}\n"
+    for description, url in year_data['bookmarks']:
+        plain_text += f"{description}: {url}\n"
+    plain_text += "\n"
+
+msg.set_content(plain_text)  # Plain text version
 msg.add_alternative(html_content, subtype='html')  # HTML version
 
 # Attempt to send the email, retrying if necessary
