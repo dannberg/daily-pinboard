@@ -37,21 +37,21 @@ numOfYears = datetime.now().year - firstPostYear + 1
 year = datetime.now() - relativedelta(years=1)
 
 datePosts = []
-email_body = ''
+email_body = []
 
 # Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
-    dayBeforeSearchDate = searchDate - timedelta(days=1)
-    post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    # Set time to start of day and end of day to catch all posts
+    start_date = searchDate.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_date = searchDate.replace(hour=23, minute=59, second=59, microsecond=999999)
+    post = pb.posts.all(start=0, results=20, fromdt=start_date, todt=end_date)
     if post:
-        year_str = str(searchDate.year)
-        email_body += f"<h2>Year: {year_str}</h2>\n<ul>\n"
-        for bookmark in post:
-            description = bookmark.description
-            url = bookmark.url
-            email_body += f"<li>{description}: <a href=\"{url}\">{url}</a></li>\n"
-        email_body += "</ul>\n\n"
+        year_data = {
+            'year': str(searchDate.year),
+            'bookmarks': [(b.description, b.url) for b in post]
+        }
+        email_body.append(year_data)
 
 # Get current month and day as strings
 current_date = datetime.now()
