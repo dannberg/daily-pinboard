@@ -60,17 +60,20 @@ python daily_pinboard.py
 Or set up a cron job for daily execution:
 
 1. Make the scripts executable:
+
 ```sh
 chmod +x rundailypinboard.sh
 chmod +x daily-pinboard.py
 ```
 
 2. Open your crontab file:
+
 ```sh
 crontab -e
 ```
 
 3. Add the following line:
+
 ```sh
 0 7 * * * /path/to/rundailypinboard.sh >> /path/to/daily-pinboard/logs.txt 2>&1
 ```
