@@ -43,11 +43,8 @@ email_body = []
 # Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
-    # Set time to start of day and end of day to catch all posts
-    start_date = searchDate.replace(hour=0, minute=0, second=0, microsecond=0)
-    end_date = searchDate.replace(hour=23, minute=59, second=59, microsecond=999999)
-    print(f"Searching for posts between {start_date} and {end_date}")
-    post = pb.posts.all(start=0, results=20, fromdt=start_date, todt=end_date)
+    print(f"Searching for posts on {searchDate}")
+    post = pb.posts.all(start=0, results=20, fromdt=searchDate, todt=searchDate)
     print(f"Found {len(post)} posts for year {searchDate.year}")
     if post:
         year_data = {
