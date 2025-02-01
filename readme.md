@@ -22,23 +22,32 @@ Ensure you have the required Python packages installed.
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Environment Variables
+### 2️⃣ Config and Environment Variables
 
-Create a `.env` file in the project root with the following variables:
+This code uses a `config.py` file in the same directory as the script, which contains your secrets.
+
+To use this, rename `config-example.py` to `config.py` and update all the variables:
+
+| Config             | Description                                                                         |
+|--------------------|-------------------------------------------------------------------------------------|
+| MSG_FROM           | Email address where the daily email should be sent from                             |
+| MSG_TO             | Email address where you want the email sent                                         |
+| SMTP_SERVER        | Your SMTP server address                                                            |
+| SMTP_USERNAME      | Your SMTP server username                                                           |
+| FIRST_POST_YEAR    | The year in which you made your first Pinboard bookmark                             |
+
+Also, add your Pinboard API token (from your [Pinboard password page](https://pinboard.in/settings/password)) and SMTP passwords as environmental variables (`/etc/environment`):
 
 ```ini
-PB_TOKEN=your_pinboard_api_token
-MAILGUN_DOMAIN=your_mailgun_domain
-MAILGUN_API_KEY=your_mailgun_api_key
-TO_EMAIL=recipient@example.com
-FROM_EMAIL=your_from_email@example.com
+PINBOARD_API_TOKEN=your_pinboard_api_token
+SMTP_PASS=your_smtp_password
 ```
 
-- `PB_TOKEN`: Pinboard API token (Get yours from [Pinboard Settings](https://pinboard.in/settings/password))
-- `MAILGUN_DOMAIN`: Your Mailgun domain for sending emails
-- `MAILGUN_API_KEY`: Mailgun API key
-- `TO_EMAIL`: The recipient of the daily email
-- `FROM_EMAIL`: The sender’s email
+- `PINBOARD_API_TOKEN`: Pinboard API token (Get yours from [Pinboard Settings](https://pinboard.in/settings/password))
+- `SMTP_PASS`: Your SMTP server password
+
+**TIP:** *(optional)* If you want a simple and inexpensive way to forward and send emails with your domains, I've been a happy customer of [ForwardedEmail.net](https://forwardedemail.net) for a while now. This is not an ad, just a personal recommendation.
+
 
 ### 3️⃣ Running the Script
 
@@ -51,10 +60,10 @@ python daily_pinboard.py
 Or set up a cron job for daily execution:
 
 ```sh
-0 8 * * * /usr/bin/python3 /path/to/daily_pinboard.py >> /path/to/logfile.log 2>&1
+0 7 * * * /usr/bin/python3 /path/to/daily_pinboard.py >> /path/to/logfile.log 2>&1
 ```
 
-This runs the script every day at 8 AM.
+This runs the script every day at 7 AM.
 
 ---
 
