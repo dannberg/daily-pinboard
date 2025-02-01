@@ -59,11 +59,25 @@ python daily_pinboard.py
 
 Or set up a cron job for daily execution:
 
+1. Make the scripts executable:
 ```sh
-0 7 * * * /usr/bin/python3 /path/to/daily_pinboard.py >> /path/to/logfile.log 2>&1
+chmod +x rundailypinboard.sh
+chmod +x daily-pinboard.py
 ```
 
-This runs the script every day at 7 AM.
+2. Open your crontab file:
+```sh
+crontab -e
+```
+
+3. Add the following line:
+```sh
+0 7 * * * /path/to/rundailypinboard.sh >> /path/to/daily-pinboard/logs.txt 2>&1
+```
+
+**Note:** Replace both `/path/to/` with the actual paths to your script and logs.txt file.
+
+The cron job will run daily at 7 AM (server timezone). You can [adjust the schedule](https://crontab.guru/#0_7_*_*_*) to your preferred time. Logs are saved to `logs.txt`, which is ignored by this repository.
 
 ---
 
