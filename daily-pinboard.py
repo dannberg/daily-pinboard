@@ -46,12 +46,12 @@ for x in range(0, numOfYears):
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
     if post:
         year_str = str(searchDate.year)
-        email_body += f"Year: {year_str}\n"
+        email_body += f"<h2>Year: {year_str}</h2>\n<ul>\n"
         for bookmark in post:
             description = bookmark.description
             url = bookmark.url
-            email_body += f"{description}: <a href=\"{url}\">{url}</a>\n"
-        email_body += "\n\n"
+            email_body += f"<li>{description}: <a href=\"{url}\">{url}</a></li>\n"
+        email_body += "</ul>\n\n"
 
 # Get current month and day as strings
 current_date = datetime.now()
