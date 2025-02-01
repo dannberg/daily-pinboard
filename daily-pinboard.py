@@ -50,7 +50,7 @@ for x in range(0, numOfYears):
         for bookmark in post:
             description = bookmark.description
             url = bookmark.url
-            email_body += f"{description}: {url}\n"
+            email_body += f"{description}: <a href=\"{url}\">{url}</a>\n"
         email_body += "\n\n"
 
 # Get current month and day as strings
