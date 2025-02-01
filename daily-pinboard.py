@@ -46,17 +46,29 @@ for x in range(0, numOfYears):
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
     if post:
         year_str = str(searchDate.year)
-        email_body += f"Year: {year_str}\n"
+        email_body += f"<h2>Year: {year_str}</h2>\n<ul>\n"
         for bookmark in post:
             description = bookmark.description
             url = bookmark.url
-            email_body += f"{description}: {url}\n"
-        email_body += "\n\n"
+            email_body += f"<li>{description}: <a href=\"{url}\">{url}</a></li>\n"
+        email_body += "</ul>\n\n"
 
 # Get current month and day as strings
 current_date = datetime.now()
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
+
+# Read the email template
+with open('email_template.html', 'r') as template_file:
+    html_template = template_file.read()
+
+# Format the email content with HTML
+formatted_content = email_body.replace('\n', '<br>')
+html_content = html_template.format(
+    month=current_month,
+    day=current_day,
+    content=formatted_content
+)
 
 # Set up the email message
 msg = EmailMessage()
@@ -64,8 +76,9 @@ msg['Subject'] = 'Pinboard Posts for ' + current_month + ' ' + current_day
 msg['From'] = config.MSG_FROM
 msg['To'] = config.MSG_TO
 
-# Set email message body as content of datePosts array
-msg.set_content(email_body)
+# Set both plain text and HTML versions
+msg.set_content(email_body)  # Plain text version
+msg.add_alternative(html_content, subtype='html')  # HTML version
 
 # Attempt to send the email, retrying if necessary
 for attempt in range(MAX_RETRIES):
