@@ -58,14 +58,27 @@ current_date = datetime.now()
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
 
+# Read the email template
+with open('email_template.html', 'r') as template_file:
+    html_template = template_file.read()
+
+# Format the email content with HTML
+formatted_content = email_body.replace('\n', '<br>')
+html_content = html_template.format(
+    month=current_month,
+    day=current_day,
+    content=formatted_content
+)
+
 # Set up the email message
 msg = EmailMessage()
 msg['Subject'] = 'Pinboard Posts for ' + current_month + ' ' + current_day
 msg['From'] = config.MSG_FROM
 msg['To'] = config.MSG_TO
 
-# Set email message body as content of datePosts array
-msg.set_content(email_body)
+# Set both plain text and HTML versions
+msg.set_content(email_body)  # Plain text version
+msg.add_alternative(html_content, subtype='html')  # HTML version
 
 # Attempt to send the email, retrying if necessary
 for attempt in range(MAX_RETRIES):
