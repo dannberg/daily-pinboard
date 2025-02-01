@@ -30,6 +30,16 @@ wait_for_network()
 
 pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
 
+# Add debug section after creating the Pinboard client
+token = os.getenv("PINBOARD_API_TOKEN")
+masked_token = token[:4] + "..." + token[-4:] if token else "None"
+print(f"Using Pinboard API token: {masked_token}")
+
+# Test basic API connectivity
+print("Testing API connection with recent posts...")
+recent_posts = pb.posts.recent(count=1)
+print(f"Recent posts test: {recent_posts}")
+
 # Manually look to see what year you had your first Pinboard post
 firstPostYear = int(config.FIRST_POST_YEAR)
 
@@ -39,19 +49,22 @@ year = datetime.now() - relativedelta(years=1)
 datePosts = []
 email_body = []
 
-
-# Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
+# Modify the search loop
 for x in range(0, numOfYears):
-    searchDate = (datetime.now() - relativedelta(years=x)).date()  # Get just the date portion
-    print(f"Searching for posts on {searchDate}")
-    post = pb.posts.all(start=0, results=20, fromdt=searchDate, todt=searchDate)
-    print(f"Found {len(post)} posts for year {searchDate.year}")
-    if post:
-        year_data = {
-            'year': str(searchDate.year),
-            'bookmarks': [(b.description, b.url) for b in post]
-        }
-        email_body.append(year_data)
+    searchDate = (datetime.now() - relativedelta(years=x)).date()
+    print(f"\nSearching for posts on {searchDate}")
+    try:
+        post = pb.posts.all(start=0, results=20, fromdt=searchDate, todt=searchDate)
+        print(f"API Response: {post}")  # Print the raw response
+        print(f"Found {len(post)} posts for year {searchDate.year}")
+        if post:
+            year_data = {
+                'year': str(searchDate.year),
+                'bookmarks': [(b.description, b.url) for b in post]
+            }
+            email_body.append(year_data)
+    except Exception as e:
+        print(f"Error querying for date {searchDate}: {str(e)}")
 
 # Get current month and day as strings
 current_date = datetime.now()
