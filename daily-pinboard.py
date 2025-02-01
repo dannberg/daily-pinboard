@@ -71,6 +71,12 @@ for year_data in email_body:
         years_content += f'<li>{description}: <a href="{url}">{url}</a></li>\n'
     years_content += '</ul>\n\n'
 
+# Add debug logging
+print(f"Found {len(email_body)} years with posts")
+if len(email_body) == 0:
+    print("No posts found for any year on this date")
+    exit(0)
+
 # Format the email content
 html_content = html_template.format(
     month=current_month,
@@ -100,16 +106,19 @@ for attempt in range(MAX_RETRIES):
     try:
         print(f"Attempting to connect to SMTP server ({attempt + 1}/{MAX_RETRIES})...")
         server = smtplib.SMTP(config.SMTP_SERVER, timeout=10)
+        server.set_debuglevel(1)  # Add debug logging for SMTP
         server.starttls()
         server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
 
-        if len(email_body) > 0:
-            server.send_message(msg)
+        print(f"Sending email to: {config.MSG_TO}")
+        server.send_message(msg)
         server.quit()
         print("Email sent successfully.")
-        break  # Exit loop if successful
+        break
     except (socket.gaierror, OSError, smtplib.SMTPException) as e:
         print(f"SMTP connection failed: {e}. Retrying in {RETRY_INTERVAL} seconds...")
+        if hasattr(e, 'smtp_error'):
+            print(f"SMTP Error: {e.smtp_error}")
         time.sleep(RETRY_INTERVAL)
 else:
     print("Failed to send email after multiple attempts. Exiting.")
