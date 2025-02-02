@@ -54,14 +54,16 @@ datePosts = []
 email_body = ''
 
 # Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
+total_posts = 0  # Add counter variable
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
-    dayBeforeSearchDate = searchDate - timedelta(days=1)
+    dayBeforeSearchDate = searchDate - timedelta(days=2) # Change back to 1
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
     if post:
         year_str = str(searchDate.year)
         email_body += f"Year: {year_str}\n"
         for bookmark in post:
+            total_posts += 1  # Increment counter for each bookmark
             description = bookmark.description
             url = bookmark.url
             email_body += f"{description}: <a href=\"{url}\">{url}</a>\n"
@@ -69,6 +71,11 @@ for x in range(0, numOfYears):
 
 # Get current month and day as strings
 current_date = datetime.now()
+
+# Manual date override for testing (comment out when not testing)
+# test_date = datetime(current_date.year, 3, 15)  # Example: March 15
+# current_date = test_date
+
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
 
@@ -105,7 +112,7 @@ for attempt in range(MAX_RETRIES):
         if len(email_body) > 0:
             server.send_message(msg)
         server.quit()
-        print("Email sent successfully.")
+        print(f"Email sent successfully. {total_posts} posts found")
         break  # Exit loop if successful
     except (socket.gaierror, OSError, smtplib.SMTPException) as e:
         print(f"SMTP connection failed: {e}. Retrying in {RETRY_INTERVAL} seconds...")
