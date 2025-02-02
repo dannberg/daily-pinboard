@@ -49,28 +49,28 @@ year = datetime.now() - relativedelta(years=1)
 datePosts = []
 email_body = []
 
+# Get current month and day
+current_date = datetime.now()
+current_month = current_date.strftime('%m')  # Use %m for 2-digit month
+current_day = current_date.strftime('%d')
+
 # Modify the search loop
 for x in range(0, numOfYears):
-    searchDate = (datetime.now() - relativedelta(years=x)).date()
-    formatted_date = searchDate.strftime('%Y-%m-%d')  # Format date as YYYY-MM-DD
+    year = datetime.now().year - x
+    formatted_date = f"{year}-{current_month}-{current_day}"  # Format: YYYY-MM-DD
     print(f"\nSearching for posts on {formatted_date}")
     try:
-        post = pb.posts.all(dt=formatted_date)  # Use dt parameter instead of fromdt/todt
+        post = pb.posts.all(dt=formatted_date)
         print(f"API Response: {post}")
-        print(f"Found {len(post)} posts for year {searchDate.year}")
+        print(f"Found {len(post)} posts for year {year}")
         if post:
             year_data = {
-                'year': str(searchDate.year),
+                'year': str(year),
                 'bookmarks': [(b.description, b.url) for b in post]
             }
             email_body.append(year_data)
     except Exception as e:
         print(f"Error querying for date {formatted_date}: {str(e)}")
-
-# Get current month and day as strings
-current_date = datetime.now()
-current_month = current_date.strftime('%B')
-current_day = current_date.strftime('%d')
 
 # Read the email template
 with open('email_template.html', 'r') as template_file:
