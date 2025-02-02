@@ -40,6 +40,10 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
+# Environment variables
+.env
+.env.*
+
 # Log files
 logs.txt
 pinboard_daily.log

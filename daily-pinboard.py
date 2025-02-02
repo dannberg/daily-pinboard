@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import pinboard
 import config
@@ -9,6 +10,19 @@ from dateutil.relativedelta import relativedelta
 from email.message import EmailMessage
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
+
+# Load .env file if it exists
+if load_dotenv():
+    print("Loaded environment variables from .env file")
+else:
+    print("No .env file found, using system environment variables")
+
+# Get variables with fallbacks
+pinboard_token = os.getenv('PINBOARD_API_TOKEN')
+smtp_pass = os.getenv('SMTP_PASS')
+
+if not pinboard_token or not smtp_pass:
+    raise ValueError("Required environment variables are not set")
 
 MAX_RETRIES = 10
 RETRY_INTERVAL = 10
@@ -28,7 +42,7 @@ def wait_for_network():
 # Ensure network is available before running
 wait_for_network()
 
-pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
+pb = pinboard.Pinboard(pinboard_token)
 
 # Manually look to see what year you had your first Pinboard post
 firstPostYear = int(config.FIRST_POST_YEAR)
@@ -86,7 +100,7 @@ for attempt in range(MAX_RETRIES):
         print(f"Attempting to connect to SMTP server ({attempt + 1}/{MAX_RETRIES})...")
         server = smtplib.SMTP(config.SMTP_SERVER, timeout=10)
         server.starttls()
-        server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
+        server.login(config.SMTP_USERNAME, smtp_pass)
 
         if len(email_body) > 0:
             server.send_message(msg)
