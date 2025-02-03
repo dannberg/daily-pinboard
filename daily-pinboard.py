@@ -57,8 +57,11 @@ email_body = ''
 total_posts = 0  # Add counter variable
 for x in range(0, numOfYears):
     searchDate = datetime.now() - relativedelta(years=x)
-    dayBeforeSearchDate = searchDate - timedelta(days=2) # Change back to 1
+    dayBeforeSearchDate = searchDate - timedelta(days=1) # Change back to 1
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    # start_of_day = searchDate.replace(hour=0, minute=0, second=0, microsecond=0)
+    # end_of_day = searchDate.replace(hour=23, minute=59, second=59, microsecond=999999)
+    # post = pb.posts.all(start=0, results=20, fromdt=start_of_day, todt=end_of_day)
     if post:
         year_str = str(searchDate.year)
         email_body += f"Year: {year_str}\n"
@@ -73,8 +76,8 @@ for x in range(0, numOfYears):
 current_date = datetime.now()
 
 # Manual date override for testing (comment out when not testing)
-# test_date = datetime(current_date.year, 3, 15)  # Example: March 15
-# current_date = test_date
+test_date = datetime(current_date.year, 2, 1) # Test month then day
+current_date = test_date
 
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
