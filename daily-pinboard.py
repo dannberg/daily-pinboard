@@ -52,8 +52,8 @@ firstPostYear = int(config.FIRST_POST_YEAR)
 current_date = datetime.now()
 
 # Manual date override for testing (comment out when not testing)
-test_date = datetime(current_date.year, 2, 1) # Test month then day
-current_date = test_date
+# test_date = datetime(current_date.year, 2, 1) # Test month then day
+# current_date = test_date
 
 numOfYears = datetime.now().year - firstPostYear + 1
 year = current_date - relativedelta(years=1)  # Changed from datetime.now()
