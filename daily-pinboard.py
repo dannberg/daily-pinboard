@@ -8,6 +8,7 @@ import socket
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from email.message import EmailMessage
+from jinja2 import Template
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
 
@@ -47,38 +48,40 @@ pb = pinboard.Pinboard(pinboard_token)
 # Manually look to see what year you had your first Pinboard post
 firstPostYear = int(config.FIRST_POST_YEAR)
 
-numOfYears = datetime.now().year - firstPostYear + 1
-year = datetime.now() - relativedelta(years=1)
-
-datePosts = []
-email_body = ''
-
-# Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
-total_posts = 0  # Add counter variable
-for x in range(0, numOfYears):
-    searchDate = datetime.now() - relativedelta(years=x)
-    dayBeforeSearchDate = searchDate - timedelta(days=1) # Change back to 1
-    post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
-    # start_of_day = searchDate.replace(hour=0, minute=0, second=0, microsecond=0)
-    # end_of_day = searchDate.replace(hour=23, minute=59, second=59, microsecond=999999)
-    # post = pb.posts.all(start=0, results=20, fromdt=start_of_day, todt=end_of_day)
-    if post:
-        year_str = str(searchDate.year)
-        email_body += f"Year: {year_str}\n"
-        for bookmark in post:
-            total_posts += 1  # Increment counter for each bookmark
-            description = bookmark.description
-            url = bookmark.url
-            email_body += f"{description}: <a href=\"{url}\">{url}</a>\n"
-        email_body += "\n\n"
-
-# Get current month and day as strings
+# Get current date
 current_date = datetime.now()
 
 # Manual date override for testing (comment out when not testing)
 test_date = datetime(current_date.year, 2, 1) # Test month then day
 current_date = test_date
 
+numOfYears = datetime.now().year - firstPostYear + 1
+year = current_date - relativedelta(years=1)  # Changed from datetime.now()
+
+# Instead of building email_body, create a structured data dictionary
+posts_by_year = {}
+years = []
+
+# Loops through today's date for each year of Pinboard posts
+total_posts = 0
+for x in range(0, numOfYears):
+    searchDate = current_date - relativedelta(years=x)
+    dayBeforeSearchDate = searchDate - timedelta(days=1)
+    post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    
+    if post:
+        year_str = str(searchDate.year)
+        years.append(year_str)
+        posts_by_year[year_str] = []
+        
+        for bookmark in post:
+            total_posts += 1
+            posts_by_year[year_str].append({
+                'description': bookmark.description,
+                'url': bookmark.url
+            })
+
+# Get current month and day as strings
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
 
@@ -86,12 +89,13 @@ current_day = current_date.strftime('%d')
 with open('email_template.html', 'r') as template_file:
     html_template = template_file.read()
 
-# Format the email content with HTML
-formatted_content = email_body.replace('\n', '<br>')
-html_content = html_template.format(
+# Format the email content with the structured data
+template = Template(html_template)
+html_content = template.render(
     month=current_month,
     day=current_day,
-    content=formatted_content
+    years=years,
+    posts=posts_by_year
 )
 
 # Set up the email message
@@ -100,9 +104,8 @@ msg['Subject'] = 'Pinboard Posts for ' + current_month + ' ' + current_day
 msg['From'] = config.MSG_FROM
 msg['To'] = config.MSG_TO
 
-# Set both plain text and HTML versions
-msg.set_content(email_body)  # Plain text version
-msg.add_alternative(html_content, subtype='html')  # HTML version
+# Set HTML version only since we're using structured HTML
+msg.add_alternative(html_content, subtype='html')
 
 # Attempt to send the email, retrying if necessary
 for attempt in range(MAX_RETRIES):
@@ -112,7 +115,7 @@ for attempt in range(MAX_RETRIES):
         server.starttls()
         server.login(config.SMTP_USERNAME, smtp_pass)
 
-        if len(email_body) > 0:
+        if len(html_content) > 0:
             server.send_message(msg)
         server.quit()
         print(f"Email sent successfully. {total_posts} posts found")

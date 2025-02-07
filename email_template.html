@@ -1,6 +1,13 @@
 <html>
 <body>
-    <h1>Pinboard Posts for {month} {day}</h1>
-    {content}
+    <h1>Pinboard Posts for {{month}} {{day}}</h1>
+    {% for year in years %}
+    <h2>{{year}}</h2>
+    <ul>
+        {% for post in posts[year] %}
+        <li>{{post.description}} - <a href="{{post.url}}">{{post.url}}</a></li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
 </body>
-</html> 
+</html>
