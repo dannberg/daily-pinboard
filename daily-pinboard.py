@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 import pinboard
 import config
@@ -7,8 +8,22 @@ import socket
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from email.message import EmailMessage
+from jinja2 import Template
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
+
+# Load .env file if it exists
+if load_dotenv():
+    print("Loaded environment variables from .env file")
+else:
+    print("No .env file found, using system environment variables")
+
+# Get variables with fallbacks
+pinboard_token = os.getenv('PINBOARD_API_TOKEN')
+smtp_pass = os.getenv('SMTP_PASS')
+
+if not pinboard_token or not smtp_pass:
+    raise ValueError("Required environment variables are not set")
 
 MAX_RETRIES = 10
 RETRY_INTERVAL = 10
@@ -28,33 +43,45 @@ def wait_for_network():
 # Ensure network is available before running
 wait_for_network()
 
-pb = pinboard.Pinboard(os.getenv("PINBOARD_API_TOKEN"))
+pb = pinboard.Pinboard(pinboard_token)
 
 # Manually look to see what year you had your first Pinboard post
 firstPostYear = int(config.FIRST_POST_YEAR)
 
+# Get current date
+current_date = datetime.now()
+
+# Manual date override for testing (comment out when not testing)
+# test_date = datetime(current_date.year, 2, 1) # Test month then day
+# current_date = test_date
+
 numOfYears = datetime.now().year - firstPostYear + 1
-year = datetime.now() - relativedelta(years=1)
+year = current_date - relativedelta(years=1)  # Changed from datetime.now()
 
-datePosts = []
-email_body = ''
+# Instead of building email_body, create a structured data dictionary
+posts_by_year = {}
+years = []
 
-# Loops through today's date for each year of Pinboard posts, if a post exists, adds it to datePosts array
+# Loops through today's date for each year of Pinboard posts
+total_posts = 0
 for x in range(0, numOfYears):
-    searchDate = datetime.now() - relativedelta(years=x)
+    searchDate = current_date - relativedelta(years=x)
     dayBeforeSearchDate = searchDate - timedelta(days=1)
     post = pb.posts.all(start=0, results=20, fromdt=dayBeforeSearchDate, todt=searchDate)
+    
     if post:
         year_str = str(searchDate.year)
-        email_body += f"Year: {year_str}\n"
+        years.append(year_str)
+        posts_by_year[year_str] = []
+        
         for bookmark in post:
-            description = bookmark.description
-            url = bookmark.url
-            email_body += f"{description}: <a href=\"{url}\">{url}</a>\n"
-        email_body += "\n\n"
+            total_posts += 1
+            posts_by_year[year_str].append({
+                'description': bookmark.description,
+                'url': bookmark.url
+            })
 
 # Get current month and day as strings
-current_date = datetime.now()
 current_month = current_date.strftime('%B')
 current_day = current_date.strftime('%d')
 
@@ -62,12 +89,13 @@ current_day = current_date.strftime('%d')
 with open('email_template.html', 'r') as template_file:
     html_template = template_file.read()
 
-# Format the email content with HTML
-formatted_content = email_body.replace('\n', '<br>')
-html_content = html_template.format(
+# Format the email content with the structured data
+template = Template(html_template)
+html_content = template.render(
     month=current_month,
     day=current_day,
-    content=formatted_content
+    years=years,
+    posts=posts_by_year
 )
 
 # Set up the email message
@@ -76,9 +104,8 @@ msg['Subject'] = 'Pinboard Posts for ' + current_month + ' ' + current_day
 msg['From'] = config.MSG_FROM
 msg['To'] = config.MSG_TO
 
-# Set both plain text and HTML versions
-msg.set_content(email_body)  # Plain text version
-msg.add_alternative(html_content, subtype='html')  # HTML version
+# Set HTML version only since we're using structured HTML
+msg.add_alternative(html_content, subtype='html')
 
 # Attempt to send the email, retrying if necessary
 for attempt in range(MAX_RETRIES):
@@ -86,12 +113,12 @@ for attempt in range(MAX_RETRIES):
         print(f"Attempting to connect to SMTP server ({attempt + 1}/{MAX_RETRIES})...")
         server = smtplib.SMTP(config.SMTP_SERVER, timeout=10)
         server.starttls()
-        server.login(config.SMTP_USERNAME, os.getenv("SMTP_PASS"))
+        server.login(config.SMTP_USERNAME, smtp_pass)
 
-        if len(email_body) > 0:
+        if len(html_content) > 0:
             server.send_message(msg)
         server.quit()
-        print("Email sent successfully.")
+        print(f"Email sent successfully. {total_posts} posts found")
         break  # Exit loop if successful
     except (socket.gaierror, OSError, smtplib.SMTPException) as e:
         print(f"SMTP connection failed: {e}. Retrying in {RETRY_INTERVAL} seconds...")
