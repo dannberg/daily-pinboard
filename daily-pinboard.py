@@ -10,14 +10,10 @@ from dateutil.relativedelta import relativedelta
 from email.message import EmailMessage
 from jinja2 import Template
 
-# A special thank you to OpenAI's ChatGCP for the code assistance!
-
 # Handle both cases whether load_dotenv is imported or not
 try:
-    if load_dotenv():
-        print("Loaded environment variables from .env file")
-    else:
-        print("No .env file found, using system environment variables")
+    load_dotenv()  # Remove the if condition - load_dotenv() returns True even if no new variables are set
+    print("Environment variables loaded")
 except NameError:
     print("Using system environment variables")
 

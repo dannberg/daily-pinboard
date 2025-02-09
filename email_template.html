@@ -1,11 +1,17 @@
-<html>
-<body>
-    <h1>Pinboard Posts for {{month}} {{day}}</h1>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Pinboard Posts</title>
+</head>
+<body style="margin: 0; padding: 20px; font-family: Arial, sans-serif; line-height: 1.6;">
+    <h1 style="color: #333333; margin-bottom: 20px;">Pinboard Posts for {{month}} {{day}}</h1>
     {% for year in years %}
-    <h2>{{year}}</h2>
-    <ul>
+    <h2 style="color: #444444; margin-top: 25px; margin-bottom: 15px;">{{year}}</h2>
+    <ul style="list-style-type: disc; margin: 0; padding-left: 20px;">
         {% for post in posts[year] %}
-        <li>{{post.description}} - <a href="{{post.url}}">{{post.url}}</a></li>
+        <li style="margin-bottom: 10px;">{{post.description}} - <a href="{{post.url}}" style="color: #0066cc; text-decoration: underline;">{{post.url}}</a></li>
         {% endfor %}
     </ul>
     {% endfor %}
