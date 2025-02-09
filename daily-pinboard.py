@@ -1,4 +1,4 @@
-# from dotenv import load_dotenv # Uncomment during local development on MacOS
+# from dotenv import load_dotenv  # Uncomment during local development on MacOS
 import os
 import pinboard
 import config
@@ -12,11 +12,14 @@ from jinja2 import Template
 
 # A special thank you to OpenAI's ChatGCP for the code assistance!
 
-# Load .env file if it exists
-if load_dotenv():
-    print("Loaded environment variables from .env file")
-else:
-    print("No .env file found, using system environment variables")
+# Handle both cases whether load_dotenv is imported or not
+try:
+    if load_dotenv():
+        print("Loaded environment variables from .env file")
+    else:
+        print("No .env file found, using system environment variables")
+except NameError:
+    print("Using system environment variables")
 
 # Get variables with fallbacks
 pinboard_token = os.getenv('PINBOARD_API_TOKEN')
