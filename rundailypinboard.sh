@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Change to the directory where the script is located
+cd "$(dirname "$0")"
+
 # Wait for network availability before running the script
 MAX_RETRIES=10
 RETRY_INTERVAL=10
