@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+# from dotenv import load_dotenv # Uncomment during local development on MacOS
 import os
 import pinboard
 import config
