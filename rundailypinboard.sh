@@ -19,5 +19,11 @@ done
 
 echo "[$(date)] Network is available. Running script..." >> /home/dannberg/daily-pinboard/logs.txt
 
+# Activate virtual environment (adjust the path to your virtual environment)
+source ${PATH_TO_BASH_SCRIPT}/venv/bin/activate
+
 # Run the Python script
-python3 ${PATH_TO_BASH_SCRIPT}/daily-pinboard.py >> /home/dannberg/daily-pinboard/logs.txt 2>&1
+python3 ${PATH_TO_BASH_SCRIPT}/daily-pinboard.py >> ${PATH_TO_BASH_SCRIPT}/logs.txt 2>&1
+
+# Deactivate virtual environment
+deactivate
