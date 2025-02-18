@@ -99,5 +99,6 @@ This project is licensed under the MIT License. See `LICENSE` for details.
 Curious about what I plan to do next? Here's the plan:
 
 - [ ] Switch to Mailgun for email delivery
-- [ ] Update code so email html is in separate file
-- [ ] Use [beefree.io](https://beefree.io) to design better email
+- [x] Update code so email html is in separate file
+- [ ] Design better email digest
+- [ ] Move to docker
