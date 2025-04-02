@@ -24,9 +24,14 @@ pip install -r requirements.txt
 
 ### 2️⃣ Config and Environment Variables
 
-This code uses a `config.py` file in the same directory as the script, which contains your secrets.
+This code uses two configuration files:
 
-To use this, rename `config-example.py` to `config.py` and update all the variables:
+1. `config.py` - Contains non-sensitive configuration
+2. `.env` - Contains sensitive environment variables
+
+#### Setting up config.py
+
+Rename `config-example.py` to `config.py` and update all the variables:
 
 | Config             | Description                                                                         |
 |--------------------|-------------------------------------------------------------------------------------|
@@ -36,12 +41,15 @@ To use this, rename `config-example.py` to `config.py` and update all the variab
 | SMTP_USERNAME      | Your SMTP server username                                                           |
 | FIRST_POST_YEAR    | The year in which you made your first Pinboard bookmark                             |
 
-Also, add your Pinboard API token (from your [Pinboard password page](https://pinboard.in/settings/password)) and SMTP passwords as environmental variables (`/etc/environment`):
+#### Setting up Environment Variables
 
-```ini
-PINBOARD_API_TOKEN=your_pinboard_api_token
-SMTP_PASS=your_smtp_password
+Copy `.env.example` to `.env` and add your sensitive credentials:
+
+```sh
+cp .env.example .env
 ```
+
+Then edit `.env` with your actual credentials:
 
 - `PINBOARD_API_TOKEN`: Pinboard API token (Get yours from [Pinboard Settings](https://pinboard.in/settings/password))
 - `SMTP_PASS`: Your SMTP server password

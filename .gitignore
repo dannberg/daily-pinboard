@@ -43,6 +43,7 @@ Temporary Items
 # Environment variables
 .env
 .env.*
+!.env.example
 
 # Log files
 logs.txt
